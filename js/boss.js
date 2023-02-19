@@ -1,6 +1,3 @@
-// contiene le impostazioni (altezza, larghezza e margine) 
-// per le immagini che verrano visualizzate in sequenza in base all'azione in esecuzione
-// tale impostazioni verranno richieste dallo Sketcher
 function Boss(x, y, stepX, direction){
 	this.point = new Point(x, y);
 	this.stepX = stepX;
@@ -22,7 +19,6 @@ function Boss(x, y, stepX, direction){
 	this.width_death = [76,73,74,74,75,73,76,72,73,74,74,74,78,78,79];
 	this.top_death = [-30,-31,-37,-44,-45,-49,-54,-53,-55,-55,-56,-52,-30,-30,-30];
 }
-
 Boss.prototype.Running =
 	function(i) {
 		this.point = new Point(this.point.x + (i*this.stepX), this.point.y);

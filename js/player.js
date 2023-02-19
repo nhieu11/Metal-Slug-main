@@ -1,6 +1,3 @@
-// contiene le impostazioni (altezza, larghezza e margine) 
-// per le immagini che verrano visualizzate in sequenza in base all'azione in esecuzione
-// tale impostazioni verranno richieste dallo Sketcher
 //gli indici delle varie azioni servono per determinare l'immagine da proiettare
 function Player(x, y, stepX){
 	this.point = new Point(x, y);
@@ -88,8 +85,6 @@ function Player(x, y, stepX){
 	this.top_resuscitate = [0, 0, -1, -1, -2, -9,  -13, -13, -11, -11, -11, -13, -11, -11, -12, -13, -15, -16, -19, -19, -20, -21, -22, -21, -21, -21, -21, -21, -21, -22, -21, -21];
 	this.height_playerNode_div = 38;
 }
-
-// nel caso il giocatore si trovasse in "getting_down" lo step percorso sarebbe ridotto
 Player.prototype.Running =
 	function(i) {
 		var STEP = 0

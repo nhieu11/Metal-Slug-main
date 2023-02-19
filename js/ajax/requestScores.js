@@ -24,5 +24,4 @@ function requestScores(content){
 			createScoreTable(data, content);
 		}
 	}
-
 }

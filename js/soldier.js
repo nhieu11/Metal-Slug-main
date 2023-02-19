@@ -1,6 +1,3 @@
-// contiene le impostazioni (altezza, larghezza e margine) 
-// per le immagini che verrano visualizzate in sequenza in base all'azione in esecuzione
-// tale impostazioni verranno richieste dallo Sketcher
 function Soldier(x, y, stepX, stop_and_take_gun, loader){
 	this.point = new Point(x, y);
 	this.stepX = stepX;
@@ -11,7 +8,7 @@ function Soldier(x, y, stepX, stop_and_take_gun, loader){
 	this.stop_and_take_gun = stop_and_take_gun;
 	this.flagStandingStance = false;
 	this.flagTakeGun = false;
-	this.typeDeath; // 0 = SIMPLE DEATH; 1 = DEATH WITH BLOOD
+	this.typeDeath;
 	this.finish_index_running = 12;
 	this.index_running = 1;
 	this.width_running = [21, 27, 28, 24, 25, 25, 23, 21, 23, 25, 25, 25];
@@ -44,12 +41,10 @@ function Soldier(x, y, stepX, stop_and_take_gun, loader){
 	this.left_shooting = [-42, -64, -63, -63, -70];
 	this.top_shooting = [-30, -30, -28, -27, -32];
 }
-
 Soldier.prototype.Running =
 	function() {
 		this.point = new Point(this.point.x + (this.direction*this.stepX), this.point.y);
 	}
-
 Soldier.prototype.move =
 	function(move){
 		this.point = new Point(this.point.x + move, this.point.y);

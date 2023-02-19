@@ -1,4 +1,3 @@
-// COSTANTI //
 var PLAYER_RADIUS = 20;
 var PLAYGROUND_HEIGHT = 360;
 var PLAYGROUND_WIDTH = 3476;
@@ -45,37 +44,28 @@ var SLOW_DOWN_LEAVE_GUN_SOLDIER = 5;
 var SLOW_DOWN_MOVE_BOSS = 5;
 var SLOW_DOWN_SHOOTING_BOSS = 8;
 var SLOW_DOWN_DEATH_BOSS = 3;
-// COSTANTI //
-
 function Point(x,y){
 	this.x = x;
 	this.y = y;
 }
-
 function ParabolicMotion(yi, xi, vyi, vxi, a, t) {
 		yf = yi - (vyi*t) + (a*t*t/2); 
 		xf = xi + vxi*t;
 		return new Point(xf, yf);
 	}
-
 function is_numeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
-
 function is_int(n){
   if (!is_numeric(n)) return false
   else return (n % 1 == 0);
 }
-
-//crea un oggetto con le seguenti informazioni per facilitare la ricerca delle immagine allo Sketcher
 function InfoPathImages(firstname, secondname, numberOfImages, indexOfArray){
 	this.firstname = firstname;
 	this.secondname = secondname;
 	this.numberOfImages = numberOfImages;
 	this.indexOfArray = indexOfArray;
 }
-
-//maschera il div di login e mostra il div di registrazione
 function goToRegister() {
 	document.getElementById("fieldset_login").style.display = "none";
 	document.getElementById("buttonToRegister").style.display = "none";

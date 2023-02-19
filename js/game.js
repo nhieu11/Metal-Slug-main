@@ -7,17 +7,13 @@ var gameTimer = null;
 var bossBulletsTimer = null;
 var bossTimer = null;
 var game = null;
-
-//funzione chiamata al caricamento della pagina
 function begin(){
-	game = new Game(); //istanzia il gioco
-	game.createPlayground(); //crea il playground, istazia il giocatore e inizializza delle variabili utili per il disegno
+	game = new Game();
+	game.createPlayground();
 	gameTimer = setInterval('game.clockGame()', 20);
-	playerTimer = setInterval('game.clockPlayer()', 20); //si occupa di controllare se è stato premuto uno o più tasti, 
+	playerTimer = setInterval('game.clockPlayer()', 20);
 	game.start(game);
-														   //in base ai quali richiama le funzioni opportune
 }
-//contiene le variabili e le funzioni necessarie per l'esecuzione del gioco
 function Game(){
 	this.screen = document.getElementById("screen");
 	this.playgroundWrapper = document.getElementById("playgroundWrapper");
@@ -26,7 +22,7 @@ function Game(){
 	this.lifeBar = document.getElementById("lifeBar0"); 
 	this.lifeBarWidth = 120;
 	this.level = 1;
-	this.player = null; //lo inizializzo al momento della creazione del playground
+	this.player = null;
 	this.score = 0;
 	this.newScore = this.score;
 	this.counterArms = RELOADING_ARMS;
@@ -41,9 +37,7 @@ function Game(){
 	this.boss = null;
 	this.bulletsBoss = new Array();
 	this.flagGameOver = false;
-	//flag per ogni tasto della tastiera di intersse
 	this.flagA = false; this.flagW = false; this.flagD = false; this.flagK = false; this.flagSpaceBar = false; this.flagZ = false; this.flagL = false; this.flagS = false; this.flagM = false; this.flagFinishLevel = false; this.flagEnter = false; this.flagDeath = false;
-	//indice per rallentare l'esecuzione di disegno.
 	this.index_slow_down_player = SLOW_DOWN_STANDING_STANCE;
 	this.index_slow_down_player_running = SLOW_DOWN_RUNNING;
 	this.index_slow_down_bomb = SLOW_DOWN_BOMB; 
@@ -61,24 +55,18 @@ function Game(){
 	this.index_slow_down_score = SLOW_DOWN_SCORE; 
 	this.index_slow_down_countdown = SLOW_DOWN_COUNTDOWN; 
 	this.index_slow_down_shift_playground = SLOW_DOWN_RUNNING - 1;
-	//flag di utilizzo grafico per l'ostacolo del primo livello
 	this.flagPlayerFirstStep = false;
 	window.addEventListener('keydown', this.handlerKeyDown.bind(this), false);
 	window.addEventListener('keyup', this.handlerKeyUp.bind(this), false);
-	//timer in alto al centro
 	this.timer = 60; this.index_slow_down_timer = 0;
-	//variabili di controllo per il salto 
 	this.time=0;
 	this.flagJumping = false; 
 	this.y_iniziale = 0; 
 	this.x_iniziale = 0; 
 	this.vyi_iniziale = 0;
-
-	this.countdown = 10; //countdown per resuscitare
-	this.flagBoss = false; //superato un step diventa true e arriva il boss finale del livello
+	this.countdown = 10;
+	this.flagBoss = false;
 }
-
-//istanzia offset in base allo schermo, il player, il boss e disegna il campo da gioco
 Game.prototype.createPlayground =
 	function() {
 		playgroundOffsetY = this.playground.offsetTop; 
@@ -90,9 +78,6 @@ Game.prototype.createPlayground =
 		this.player.point = new Point(this.player.point.x + playgroundOffsetX, this.player.point.y);
 		this.sketcher.drawSides();
 	}
-
-//ogni flag rappresenta un tasto, ogni tasto può essere premuto solo in determinate condizioni
-//per evitare combinazioni non permesse come sparare e lanciare una bomba contemporaneamente
 Game.prototype.handlerKeyDown =
 	function(e) {
 		e = (!e) ? window.event: e;
@@ -107,7 +92,6 @@ Game.prototype.handlerKeyDown =
 		var onlyFlagM = this.flagA == false && this.flagW == false && this.flagS == false && this.flagD == false && this.flagL == false && this.flagK == false && this.flagM == true && this.flagSpaceBar == false && this.flagZ == false && this.flagGameOver == false;
 		var onlyFlagSpaceBar = this.flagA == false && this.flagW == false && this.flagS == false && this.flagD == false && this.flagL == false && this.flagK == false && this.flagM == false && this.flagSpaceBar == true && this.flagZ == false && this.flagGameOver == false;
 		var onlyFlagZ = this.flagA == false && this.flagW == false && this.flagS == false && this.flagD == false && this.flagL == false && this.flagK == false && this.flagM == false && this.flagSpaceBar == false && this.flagZ == true && this.flagGameOver == false;
-		//console.log(key);
 		switch (key){
 			case 13: if(this.player.life <= 0 && this.flagDeath == false || this.flagFinishLevel == true)
 						this.flagEnter = true;
@@ -154,13 +138,11 @@ Game.prototype.handlerKeyDown =
 						this.x_iniziale = this.player.point.x;
 						this.vyi_iniziale = 3*11/2;
 					}break;
-
 		}
 	}
-
 Game.prototype.handlerKeyUp =
 	function(e) {
-		e = (!e) ? window.event: e; //Explorer -> !e
+		e = (!e) ? window.event: e;
 		var key= (e.which!= null) ? e.which: e.keyCode;var nothing = this.flagA == false && this.flagW == false && this.flagS == false && this.flagD == false && this.flagL == false && this.flagK == false && this.flagM == false  && this.flagSpaceBar == false && this.flagZ == false && this.flagGameOver == false;
 				switch (key){
 			case 65: this.flagA = false; break;
@@ -168,17 +150,14 @@ Game.prototype.handlerKeyUp =
 			case 83: this.flagS = false; break;
 		}
 	}
-
 Game.prototype.start =
 	function(game){
 		playerBulletsBombsTimer = setInterval('game.clockPlayerBulletsBombs()', 20);
-		soldierTimer = setInterval('game.clockSoldier()', 20); //fa muovere i soldati
+		soldierTimer = setInterval('game.clockSoldier()', 20);
 		soldierBulletsTimer = setInterval('game.clockSoldierBullets()', 20);
 		bossTimer = setInterval('game.clockBoss()', 20);
 		bossBulletsTimer = setInterval('game.clockBossBullents()', 20);
 	}
-
-//alla fine del gioco o alla morte del player il popup mostrerà un bottone reset che ripristinerà il gioco
 Game.prototype.reset = 
 	function(){
 		clearInterval(bossTimer);
@@ -198,28 +177,23 @@ Game.prototype.reset =
 		this.lifeBar.style.width = this.lifeBarWidth + 'px';
 		begin();
 	}
-
-//alla fine del gioco o alla morte del player il popup mostrerà un bottone exit che porterà al login
 Game.prototype.exit =
 	function(){
 		history.back();
 	}
-
 Game.prototype.clockGame =
 	function() {
 		if(this.level == 1)
-			this.PlayerFirstStepLevel1(); //controlla l superamento del primo step del livello uno
-		this.updateArmsBombsAndScore(); //aggiorna le informazioni visibili al giocatore riguardo il suo equipaggiamento
-		this.shiftPlaygroundAndSoldier(); //quando il player è al centro e corre verso destra in realtà rimane al centro e il resto scorre verso sx
-		this.updateTimerView(); //aggiorna il timer, se arriva a 0 il player perde, mano mano che uccide soldati si incrementa
-		this.bossIsComing(); //superato un determinato punto inizia ad arrivare il boss
-		this.clockCountdown(); //quando muore il player e quest'ultimo ha ancora delle vite a disposizione ha 10 sec per premere invio e riprendere il punto che aveva lasciato
-								//"negli anni 90 si davano 10 secondi per inserire un nuovo gettone.. erano altri tempi"
-		this.checkPositionSoldiersAndPlayer(); //se il giocatore supera un soldato quest'ultimo si girerà verso il giocatore settando la direzione del soldato 
-		this.manageNewLevel(); //serve per il ripristino di alcune variabili quando si passa a un nuovo livello
-		this.checkPositionBossAndPlayer(); //se il giocatore supera il boss quest'ultimo si girerà verso il giocatore settando la direzione del boss 
+			this.PlayerFirstStepLevel1();
+		this.updateArmsBombsAndScore();
+		this.shiftPlaygroundAndSoldier();
+		this.updateTimerView();
+		this.bossIsComing();
+		this.clockCountdown();
+		this.checkPositionSoldiersAndPlayer();
+		this.manageNewLevel();
+		this.checkPositionBossAndPlayer();
 	}
-
 Game.prototype.PlayerFirstStepLevel1 =
 	function() {
 		if(PLAYGROUND_FIRST_STEP - ((this.screen.clientWidth - 700)/2) + parseInt(this.playground.style.marginLeft) <= (PLAYGROUNDWRAPPER_WIDTH/2) && this.flagPlayerFirstStep == false && this.flagW == false){
@@ -232,7 +206,6 @@ Game.prototype.PlayerFirstStepLevel1 =
 			this.flagPlayerFirstStep = true;
 		}
 	}
-
 Game.prototype.shiftPlaygroundAndSoldier =
 	function(){ 
 		if(parseInt(this.playground.style.marginLeft) + PLAYGROUND_WIDTH - playgroundOffsetX - PLAYGROUND_HEIGHT*2 <= 0)
@@ -245,14 +218,12 @@ Game.prototype.shiftPlaygroundAndSoldier =
 				this.ShiftSoldiers();
 		}
 	}
-
 Game.prototype.updateArmsBombsAndScore =
 	function(){
 		this.sketcher.drawCounterArms(parseInt(this.counterArms/100), parseInt(this.counterArms/10), this.counterArms%10);
 		this.sketcher.drawCounterBombs(parseInt(this.counterBomb/10), this.counterBomb%10);
 		this.Score();
 	}
-
 Game.prototype.updateTimerView =
 	function(){
 		if(this.timer !== 0){
@@ -270,7 +241,6 @@ Game.prototype.updateTimerView =
 			this.GameOver();
 		}
 	}
-
 Game.prototype.bossIsComing =
 	function(){
 		if(parseInt(this.playground.style.marginLeft) + PLAYGROUND_WIDTH - playgroundOffsetX - PLAYGROUND_HEIGHT*2 <= 0){
@@ -278,7 +248,6 @@ Game.prototype.bossIsComing =
 				this.number_soldier = 0;
 		}
 	}
-
 Game.prototype.clockCountdown =
 	function(){
 		var count = this.index_slow_down_countdown % SLOW_DOWN_COUNTDOWN;
@@ -300,7 +269,6 @@ Game.prototype.clockCountdown =
 			this.index_slow_down_countdown = count + 1;
 		}
 	}
-
 Game.prototype.checkPositionSoldiersAndPlayer =
 	function(){
 		for(var i=0; i<this.soldiers.length; i++){
@@ -322,7 +290,6 @@ Game.prototype.checkPositionSoldiersAndPlayer =
 			}
 		}
 	}
-
 Game.prototype.checkPositionBossAndPlayer =
 	function(){
 		if(this.boss.point.x + 20 <= this.player.point.x && this.boss.life !== 0 && this.boss.direction !== 1){
@@ -334,7 +301,6 @@ Game.prototype.checkPositionBossAndPlayer =
 			this.boss.index_shooting = 1;
 		}
 	}
-
 Game.prototype.manageNewLevel =
 	function(){
 		if(this.flagFinishLevel == true && this.flagEnter == true)
@@ -349,7 +315,6 @@ Game.prototype.manageNewLevel =
 				this.setVariablesForNewLevel();
 			}
 	}
-
 Game.prototype.manageBossForNewLevel =
 	function(){
 		clearInterval(bossTimer);
@@ -360,9 +325,7 @@ Game.prototype.manageBossForNewLevel =
 		this.boss.flagDeath = true;
 		this.DeleteBoss();
 		this.boss = new Boss(playgroundOffsetX + PLAYGROUNDWRAPPER_WIDTH, PLAYGROUND_HEIGHT - BOSS_RADIUS + playgroundOffsetY, 5);
-
 	}
-
 Game.prototype.manageSoldiersForNewLevel =
 	function(){
 		this.number_soldier = 3 + this.level - 1;
@@ -371,18 +334,16 @@ Game.prototype.manageSoldiersForNewLevel =
 		this.soldiers=[];
 		this.bulletsSoldier=[];
 	}
-
 Game.prototype.managePlayerForNewLevel =
 	function(){
 		clearInterval(playerBulletsBombsTimer);
 		this.player.life = 10;
 		this.player.point = new Point(PLAYER_RADIUS + playerOffsetLeftStart + playgroundOffsetX, PLAYGROUND_HEIGHT + playgroundOffsetY - PLAYER_RADIUS*2 - 10);
 	}
-
 Game.prototype.setVariablesForNewLevel =
 	function(){
-		this.level += 1; //aumenta il livello. La difficoltà è basata sul livello
-		this.timer = 60 - (this.level * 5); //ad ogni livello il giocatore ha meno tempo
+		this.level += 1;
+		this.timer = 60 - (this.level * 5);
 		this.counterArms = RELOADING_ARMS;
 		this.counterBomb = RELOADING_BOMBS;
 		this.flagEnter = false;
@@ -390,15 +351,11 @@ Game.prototype.setVariablesForNewLevel =
 		this.lifeBarWidth = 120;
 		this.lifeBar.style.width = this.lifeBarWidth + 'px';
 		this.start(game);
-		STEP_PLAYGROUND = STEP_PLAYER; //alla fine del livello precedente il playground si era fermato perchè STEP_PLAYGROUND = 0;
+		STEP_PLAYGROUND = STEP_PLAYER;
 		document.body.style.background = 'url("./../css/img/sfondo/sfondo_body.jpg")';
 		document.getElementById("level").innerText = "LEVEL " + this.level;
 		this.sketcher.drawPlayground(this.level, this.player);
 	}
-
-//in base hai tasti premuti vengono settati i relativi flag
-//in base ai flag settati parte sempre e solo una funzione che presenta l'azione del giocatore
-//gli indici delle varie azioni servono per determinare l'immagine da proiettare
 Game.prototype.clockPlayer =
 	function() {
 		this.PlayerStandingStance();
@@ -415,8 +372,6 @@ Game.prototype.clockPlayer =
 		this.PlayerDeath();
 		this.PlayerResuscitate();
 	}
-
-//chiama la funzione che disegna il player
 Game.prototype.PlayerAction =
 	function(index_action, finish_index_action, count, type_action, direction, move, jumping){
 		var increment = 0;
@@ -443,10 +398,6 @@ Game.prototype.PlayerAction =
 		}
 		return increment;
 	}
-
-//la logica per tutte le azioni è la stessa, incremento l'indice dell'azione e chiamo la funzione disegnatore con gli opportuni parametri
-
-//quando non viene premuto nessun tasto
 Game.prototype.PlayerStandingStance =
 	function() {
 		if(this.flagA == false && this.flagW == false && this.flagD == false && this.flagK == false && this.flagSpaceBar == false && this.flagZ == false && this.flagL == false && this.flagS == false && this.flagM == false && this.player.life > 0 && this.flagFinishLevel == false){
@@ -458,8 +409,6 @@ Game.prototype.PlayerStandingStance =
 			this.index_slow_down_player = count + 1;
 		}
 	}
-
-//quando preme A o D
 Game.prototype.PlayerRunning =
 	function(){
 		if((this.flagA == true || this.flagD == true) && this.flagW == false && this.flagK == false && this.flagSpaceBar == false && this.flagZ == false && this.flagL == false && this.flagS == false && this.flagM == false && this.player.life > 0 && this.flagFinishLevel == false){	
@@ -469,9 +418,6 @@ Game.prototype.PlayerRunning =
 			this.RunningLegs(this.player.direction);
 		}
 	}
-
-//il player è divisio in due: corpo e gambe. Per ognuna delle quali deve essere chiamata la funzione
-//di disegno perchè sono due div diversi
 Game.prototype.RunningLegs =
 	function(){
 		var move = null;
@@ -485,8 +431,6 @@ Game.prototype.RunningLegs =
 		this.player.index_running_legs_right += this.PlayerAction(this.player.index_running_legs_right, this.player.finish_index_running_legs_right, count, "running_legs_right", null, move, null);
 		this.index_slow_down_player_running = count + 1;
 	}
-
-//quando preme W (se sta fermo, va verso SX o verso DX)
 Game.prototype.PlayerJumping =
 	function(){
 		if(this.flagW == true && this.flagK == false && this.flagSpaceBar == false && this.flagZ == false && this.flagL == false && this.flagS == false && this.flagM == false && this.player.life > 0 && this.flagFinishLevel == false){
@@ -498,7 +442,6 @@ Game.prototype.PlayerJumping =
 				this.Jumping(0, "jumping");
 		}
 	}
-
 Game.prototype.Jumping =
 	function(move){
 		var direction = (this.flagJumping == false) ? 1 : -1;
@@ -514,8 +457,6 @@ Game.prototype.Jumping =
 		}else
 			this.index_slow_down_player = count + 1;
 	}
-
-//quando preme K (se sta fermo, va verso SX o verso DX)
 Game.prototype.PlayerShooting =
 	function(){
 		if(this.flagW == false && this.flagK == true && this.flagSpaceBar == false && this.flagZ == false && this.flagL == false && this.flagS == false && this.flagM == false && this.player.life > 0 && this.flagFinishLevel == false){
@@ -529,7 +470,6 @@ Game.prototype.PlayerShooting =
 			this.PlayerResetShooting();
 		}
 	}
-
 Game.prototype.PlayerResetShooting =
 	function(){
 		if(this.player.index_shooting !== 1)
@@ -540,7 +480,6 @@ Game.prototype.PlayerResetShooting =
 			this.index_slow_down_player = SLOW_DOWN_SHOOTING;
 		}
 	}
-
 Game.prototype.Shooting =
 	function(subject, offsetX, offsetY, bullets){
 		var count = this.index_slow_down_player % SLOW_DOWN_SHOOTING;
@@ -549,8 +488,6 @@ Game.prototype.Shooting =
 		subject.index_shooting += this.PlayerAction(subject.index_shooting, subject.finish_index_shooting, count, "shooting", null, null, null);
 		this.index_slow_down_player = count + 1;
 	}
-
-//quando preme SpaceBar(se sta fermo, va verso SX o verso DX)
 Game.prototype.PlayerThrowingBomb =
 	function(){
 		if(this.flagW == false && this.flagK == false && this.flagSpaceBar == true && this.flagZ == false && this.flagL == false && this.flagS == false && this.flagM == false && this.player.life > 0 && this.flagFinishLevel == false){
@@ -563,7 +500,6 @@ Game.prototype.PlayerThrowingBomb =
 				this.RunningLegs();
 		}
 	}
-
 Game.prototype.ThrowingBomb =
 	function(){
 		var count = this.index_slow_down_player % SLOW_DOWN_THROWING_BOMB;
@@ -579,8 +515,6 @@ Game.prototype.ThrowingBomb =
 			this.index_slow_down_player = SLOW_DOWN_THROWING_BOMB;
 		}
 	}
-
-//quando preme L (se sta fermo, va verso SX o verso DX)
 Game.prototype.PlayerReloading =
 	function(){
 		if(this.flagW == false && this.flagK == false && this.flagSpaceBar == false && this.flagZ == false && this.flagL == true && this.flagS == false && this.flagM == false && this.player.life > 0 && this.flagFinishLevel == false){
@@ -593,7 +527,6 @@ Game.prototype.PlayerReloading =
 				this.RunningLegs();
 		}
 	}
-
 Game.prototype.Reloading =
 	function(){
 		var count = this.index_slow_down_player % SLOW_DOWN_RELOADING;
@@ -608,8 +541,6 @@ Game.prototype.Reloading =
 			this.index_slow_down_player = SLOW_DOWN_RELOADING;
 		}
 	}
-
-//quando preme S (se sta fermo)
 Game.prototype.PlayerGettingDown =
 	function(){
 		if(this.flagW == false && this.flagSpaceBar == false && this.flagZ == false && this.flagL == false && this.flagS == true && this.flagM == false && this.player.life > 0 && this.flagFinishLevel == false){
@@ -635,8 +566,6 @@ Game.prototype.PlayerGettingDown =
 			}
 		}
 	}
-
-//quando preme S (se va verso SX o verso DX)
 Game.prototype.PlayerGettingDownMove =
 	function(){
 		var move = null;
@@ -650,8 +579,6 @@ Game.prototype.PlayerGettingDownMove =
 		this.player.index_getting_down_move += this.PlayerAction(this.player.index_getting_down_move, this.player.finish_index_getting_down_move, count, "getting_down_move", null, move, null);
 		this.index_slow_down_player = count + 1;
 	}
-
-//quando preme S e K
 Game.prototype.GettingDownShooting =
 	function(){
 		var count = this.index_slow_down_player % SLOW_DOWN_SHOOTING;
@@ -667,7 +594,6 @@ Game.prototype.GettingDownShooting =
 			this.index_slow_down_player = SLOW_DOWN_SHOOTING;
 		}
 	}
-
 Game.prototype.PlayerStabbing =
 	function(){
 		if(this.flagW == false && this.flagK == false && this.flagSpaceBar == false && this.flagZ == false && this.flagL == false && this.flagS == false && this.flagM == true && this.player.life > 0 && this.flagFinishLevel == false){
@@ -680,8 +606,6 @@ Game.prototype.PlayerStabbing =
 				this.RunningLegs();
 		}
 	}
-
-//quando preme M (se sta fermo, va verso SX o verso DX)
 Game.prototype.Stabbing =
 	function(){
 		var count = this.index_slow_down % SLOW_DOWN_STABBING;
@@ -694,8 +618,6 @@ Game.prototype.Stabbing =
 			this.index_slow_down = SLOW_DOWN_STABBING;
 		}
 	}
-
-//quando finisce il livello
 Game.prototype.PlayerExulting =
 	function() {
 		if(this.boss.life <= 0){
@@ -706,13 +628,8 @@ Game.prototype.PlayerExulting =
 			var count = this.index_slow_down_player % SLOW_DOWN_EXULTING;
 			this.player.index_exulting += this.PlayerAction(this.player.index_exulting, this.player.finish_index_exulting, count, "exulting", 1, null, null);
 			this.index_slow_down_player = count + 1;
-
 		}
 	}
-
-//il player può essere colpito o da un soldato o dal boss
-//in entrambi i casi si effettua un controllo della posizione del player (x e y)
-//e la posizione delle pallottole del boss e del soldato
 Game.prototype.PlayerIsHit =
 	function(){
 		if(this.player.life > 0){
@@ -720,7 +637,6 @@ Game.prototype.PlayerIsHit =
 			this.PlayerIsHitByBoss();
 		}
 	}
-
 Game.prototype.PlayerIsHitBySoldier =
 	function(){
 		for(j=0; j<this.bulletsSoldier.length; j++)
@@ -736,7 +652,6 @@ Game.prototype.PlayerIsHitBySoldier =
 				this.lifeBar.style.width = this.lifeBarWidth + 'px';
 			}
 	}
-
 Game.prototype.PlayerIsHitByBoss =
 	function(){
 		for(j=0; j<this.bulletsBoss.length; j++)
@@ -752,8 +667,6 @@ Game.prototype.PlayerIsHitByBoss =
 				this.lifeBar.style.width = this.lifeBarWidth + 'px';
 			}
 	}
-
-//è un'azione come le altre. finita l'animazione viene chiamata la funzione Lose
 Game.prototype.PlayerDeath =
 	function(){
 		var count = this.index_slow_down_player % SLOW_DOWN_DEATH;
@@ -767,8 +680,6 @@ Game.prototype.PlayerDeath =
 			}
 		}
 	}
-
-//è un'azione come le altre che però ripristina il gioco che si era temporaneamente fermato
 Game.prototype.PlayerResuscitate = 
 	function(){
 		if(this.flagEnter == true && this.flagFinishLevel == false){
@@ -794,7 +705,6 @@ Game.prototype.PlayerResuscitate =
 				}
 		}
 	}
-
 Game.prototype.Score =
 	function(){
 		var numberScore0 = 0;
@@ -817,7 +727,6 @@ Game.prototype.Score =
 			}else
 				this.index_slow_down_score += 1;
 	}
-
 Game.prototype.Lose =
 	function(){
 		this.clearTimer();
@@ -827,7 +736,6 @@ Game.prototype.Lose =
 		}else
 			this.GameOver();
 	}
-
 Game.prototype.clearTimer =
 	function(){
 		clearInterval(playerBulletsBombsTimer);
@@ -836,7 +744,6 @@ Game.prototype.clearTimer =
 		clearInterval(bossTimer);
 		clearInterval(bossBulletsTimer);
 	}
-
 Game.prototype.GameOver =
 	function(){
 		clearInterval(gameTimer); 
@@ -849,29 +756,24 @@ Game.prototype.GameOver =
 		createPopup(this.newScore, this); 
 		document.getElementById("gameOver").style.opacity = 1;
 	}
-
 //aggiorna la posizione di pallottole, bombe e esplosioni, eventualmente le elimina
 Game.prototype.clockPlayerBulletsBombs =
 	function(){
 		if(this.bullets.length !== 0){
 			this.moveBullets(this.bullets, "bullet");
 			this.ControlBullets(this.bullets, "bullet");}
-
 		if(this.bombs.length !== 0){
 			this.moveBombs();
 			this.deleteBombs()}
-
 		if(this.explosions.length !== 0){
 			this.moveExplosion();
 			this.deleteExplosion();}
 	}
-
 Game.prototype.CreateBullets =
 	function(subject, bullets, x, y, direction){
 		if(subject.index_shooting == 3 || subject.index_getting_down_shooting == 3)
 			bullets.push(new Bullet(x, y, 5, direction));
 	}
-
 Game.prototype.moveBullets =
 	function(bullets, idBullet) {
 		for(var i=0; i<bullets.length; i++){
@@ -881,14 +783,12 @@ Game.prototype.moveBullets =
 			else this.sketcher.drawBullet(bullets[i], i, idBullet, "black")
 		}
 	}
-
 Game.prototype.ControlBullets =
 	function(bullets, idBullet) {
 		for(var i = 0; i < bullets.length; i++)
 			if(bullets[0].point.x > PLAYGROUNDWRAPPER_WIDTH + playgroundOffsetX || bullets[0].point.x < playgroundOffsetX - 5)
 				this.DeleteBullet(bullets, idBullet, i);
 	}
-
 Game.prototype.DeleteBullet =
 	function(bullets, idBullet, i){
 		bullets.splice(i,1);
@@ -897,7 +797,6 @@ Game.prototype.DeleteBullet =
 		bulletNodeLast = document.getElementById(idBullet + (bullets.length));
 		if(bulletNodeLast !== null) bulletNodeLast.parentNode.removeChild(bulletNodeLast);
 	}
-
 Game.prototype.CreateBomb =
 	function(){
 		if(this.player.index_throwing_bomb == 4){
@@ -907,7 +806,6 @@ Game.prototype.CreateBomb =
 			this.bombs.push(new Bomb(x, y, x, y + PLAYER_RADIUS, 0, 0, this.player.direction));
 		}
 	}
-
 Game.prototype.moveBombs =
 	function() {
 		var count = this.index_slow_down_bomb % SLOW_DOWN_BOMB;
@@ -923,7 +821,6 @@ Game.prototype.moveBombs =
 		}
 		this.index_slow_down_bomb = count + 1;
 	}
-
 Game.prototype.deleteBombs =
 	function() {
 		if(this.bombs[0].img == 7){
@@ -937,7 +834,6 @@ Game.prototype.deleteBombs =
 			}
 		}
 	}
-
 Game.prototype.moveExplosion =
 	function() {
 		var count = this.index_slow_down_explosion % SLOW_DOWN_EXPLOSION;
@@ -953,7 +849,6 @@ Game.prototype.moveExplosion =
 		}
 		this.index_slow_down_explosion = count + 1;
 	}
-
 Game.prototype.deleteExplosion =
 	function() {
 		if(this.explosions[0].img == 21){
@@ -966,7 +861,6 @@ Game.prototype.deleteExplosion =
 			}
 		}
 	}
-
 Game.prototype.clockSoldier =
 	function() {
 		//ogni due secondi c'è il 50% di probabilità che venga generato un soldato
@@ -998,7 +892,6 @@ Game.prototype.clockSoldier =
 		if(this.soldiers.length !== 0 && this.explosions.length !== 0)
 			this.SoldierIsHitWithBomb();
 	}
-
 Game.prototype.SoldierCreate =
 	function() {
 		var count = this.index_slow_down_create_soldire % SLOW_DOWN_CREATE_SOLDIER;
@@ -1011,14 +904,12 @@ Game.prototype.SoldierCreate =
 		}
 		this.index_slow_down_create_soldire = count + 1;
 	}
-
 Game.prototype.ShiftSoldiers =
 	function(){
 		for(i=0; i<this.soldiers.length; i++)
 			if(true)
 				this.soldiers[i].move(-STEP_PLAYGROUND);
 	}
-
 Game.prototype.SoldierStop =
 	function(){
 		var index_for_distance_player_ = Math.floor(Math.random()*3);
@@ -1028,10 +919,8 @@ Game.prototype.SoldierStop =
 			case 1: distance_player_ = 200; break;
 			case 2: distance_player_ = 300; break;
 		}
-		
 		return distance_player_;
 	}
-
 Game.prototype.SoldierAction =
 	function(index_action, finish_index_action, count, type_action, direction, move, i){
 		this.sketcher.drawSoldier(this.soldiers[i], type_action, i);
@@ -1043,7 +932,6 @@ Game.prototype.SoldierAction =
 			this.soldiers[i].Running();
 		return direction;
 	}
-
 Game.prototype.SoldierRunning =
 	function(){
 		var count = this.index_slow_down_running_soldier % SLOW_DOWN_RUNNING_SOLDIER;
@@ -1061,7 +949,6 @@ Game.prototype.SoldierRunning =
 				}
 		this.index_slow_down_running_soldier = count + 1;
 	}
-
 Game.prototype.SoldierTakeGun =
 	function(){
 		var count = this.index_slow_down_take_gun_soldier % SLOW_DOWN_TAKE_GUN_SOLDIER;
@@ -1074,7 +961,6 @@ Game.prototype.SoldierTakeGun =
 				}
 		this.index_slow_down_take_gun_soldier = count + 1;;
 	}
-
 Game.prototype.SoldierLeaveGun =
 	function(){
 		var count = this.index_slow_down_leave_gun_soldier % SLOW_DOWN_LEAVE_GUN_SOLDIER;
@@ -1089,7 +975,6 @@ Game.prototype.SoldierLeaveGun =
 				}
 		this.index_slow_down_leave_gun_soldier = count + 1;;
 	}
-
 Game.prototype.SoldierShooting =
 	function(){
 		var count = this.index_slow_down_shooting_soldier % SLOW_DOWN_SHOOTING_SOLDIER;
@@ -1105,12 +990,10 @@ Game.prototype.SoldierShooting =
 		}
 		this.index_slow_down_shooting_soldier = count + 1;
 	}
-
 Game.prototype.SoldierDeathWithGun =
 	function(){
 		this.SoldierDeath(0, this.soldiers[0].finish_index_death);
 	}
-
 Game.prototype.SoldierDeath =
 	function(typeDeath, finish_index_action){
 		var typeDeathAction = (typeDeath == 0) ? "death" : "death_blood";
@@ -1122,15 +1005,12 @@ Game.prototype.SoldierDeath =
 						setTimeout(this.DeleteSoldier(i), 2000);
 					else
 						this.soldiers[i].index_death += this.SoldierAction(this.soldiers[i].index_death, finish_index_action, count, typeDeathAction, 1, null, i);
-
 		this.index_slow_down_death_soldier = count + 1;
 	}
-
 Game.prototype.SoldierDeathBlood =
 	function(){
 		this.SoldierDeath(1, this.soldiers[0].finish_index_death_blood);
 	}
-
 Game.prototype.DeleteSoldier =
 	function(i){
 		this.number_soldier += 1;
@@ -1142,7 +1022,6 @@ Game.prototype.DeleteSoldier =
 			if(soldierNodeLast !== null) soldierNodeLast.parentNode.removeChild(soldierNodeLast);
 		}
 	}
-
 Game.prototype.DeleteAllSoldiers =
 	function(){
 		var soldierNode = null;
@@ -1151,7 +1030,6 @@ Game.prototype.DeleteAllSoldiers =
 			if(soldierNode !== null)soldierNode.parentNode.removeChild(soldierNode);
 		}
 	}
-
 Game.prototype.DeleteAllBulletsSoldier =
 	function(){
 		var bulletSoldierNode = null;
@@ -1160,7 +1038,6 @@ Game.prototype.DeleteAllBulletsSoldier =
 			if(bulletSoldierNode !== null)bulletSoldierNode.parentNode.removeChild(bulletSoldierNode);
 		}
 	}
-
 Game.prototype.SoldierIsHitWithBullet =
 	function(){
 		for(i=0; i<this.soldiers.length; i++)
@@ -1176,7 +1053,6 @@ Game.prototype.SoldierIsHitWithBullet =
 						}
 					}
 	}
-
 Game.prototype.SoldierIsHitWithBomb =
 	function(){
 		for(i=0; i<this.soldiers.length; i++)
@@ -1189,7 +1065,6 @@ Game.prototype.SoldierIsHitWithBomb =
 						this.timer += 2;
 					}
 	}
-
 Game.prototype.SoldierIsHitWithKnife =
 	function(){
 		for(i=0; i<this.soldiers.length; i++)
@@ -1201,18 +1076,16 @@ Game.prototype.SoldierIsHitWithKnife =
 					this.timer += 2;
 				}
 	}
-
 Game.prototype.clockSoldierBullets =
 	function(){
 		if(this.bulletsSoldier.length !== 0){
 			this.moveBullets(this.bulletsSoldier, "bulletSoldier");
 			this.ControlBullets(this.bulletsSoldier, "bulletSoldier");}
 	}
-
 Game.prototype.clockBoss =
 	function(){
-		if(this.flagBoss == true){ // diventa true dopo che il giocatore a superato un determinato punto
-			this.BossMove(); // sposta il boss verso il giocatore fino ad un determinato punto
+		if(this.flagBoss == true){
+			this.BossMove();
 			this.BossShooting(); //se il boss è fermo, spara
 			//se il boss viene colpito la sua vita viene decrementat
 			//anche qui viene fatto un controllo sulle posizioni di pallottola e boss
@@ -1221,7 +1094,6 @@ Game.prototype.clockBoss =
 			this.BossDeath();
 		}
 	}
-
 Game.prototype.BossAction =
 	function(index_action, finish_index_action, count, type_action, direction, move){
 		this.sketcher.drawBoss(this.boss, type_action);
@@ -1233,7 +1105,6 @@ Game.prototype.BossAction =
 			this.boss.Running(move);
 		return direction;
 	}
-
 Game.prototype.BossMove =
 	function(){
 		if(this.boss.flagShooting == false && this.boss.life > 0){
@@ -1248,7 +1119,6 @@ Game.prototype.BossMove =
 			this.index_slow_down_boss = count + 1;
 		}
 	}
-
 Game.prototype.BossShooting =
 	function(){
 		if(this.boss.flagShooting == true && this.boss.life > 0){
@@ -1265,7 +1135,6 @@ Game.prototype.BossShooting =
 			this.index_slow_down_boss = count + 1;
 		}
 	}
-
 Game.prototype.BossIsHitWhitBullet =
 	function(){
 		if(this.boss.life > 0)	
@@ -1280,7 +1149,6 @@ Game.prototype.BossIsHitWhitBullet =
 					}
 				}
 	}
-
 Game.prototype.BossIsHitWhitBomb =
 	function(){
 		if(this.boss.life > 0)	
@@ -1294,7 +1162,6 @@ Game.prototype.BossIsHitWhitBomb =
 					}
 				}
 	}
-
 Game.prototype.BossDeath =
 	function(){
 		if(this.boss.life <= 0 && this.boss.flagDeath == false){
@@ -1308,7 +1175,6 @@ Game.prototype.BossDeath =
 			this.index_slow_down_boss = count + 1;
 		}
 	}
-
 Game.prototype.DeleteBoss =
 	function(){
 		var bossNode = null;
@@ -1318,7 +1184,6 @@ Game.prototype.DeleteBoss =
 			bossNode.parentNode.removeChild(bossNode);
 		}
 	}
-
 Game.prototype.clockBossBullents =
 	function(){
 		if(this.bulletsBoss.length !== 0){

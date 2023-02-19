@@ -8,8 +8,6 @@ function Bomb(x, y, firstX, firstY, img, time, direction){
 	this.width = [15, 15, 18, 20, 23, 22, 23];
 	this.height = [28, 25, 23, 20, 18, 15, 15];
 }
-
-//movimento parabolico (considerando il numero delle immagini 7)
 Bomb.prototype.move =
 	function() {
 		this.time += 1;

@@ -1,9 +1,5 @@
-
 var ArrayOfInfoPathsImages = [];
 var Images = [];
-
-//istanzia gli elementi che cambieranno forma e immagine durante il gioco, per poterli cambiare dinamicamente 
-//in modo più leggibile
 function Sketcher(){
 	this.loadImages();
 	this.playgroundWrapper = document.getElementById("playgroundWrapper");
@@ -31,22 +27,16 @@ function Sketcher(){
 	this.screen = document.getElementById("screen");
 	this.gameOverImg = document.getElementById("gameOver");
 }
-
-//carica le immagini necessarie al gioco su un unico array indicizzato
-//per evitare ritardi
 Sketcher.prototype.loadImages= 
 	function(){
-		//tali array rispecchiano le cartelle all'interno del percorso ./../css/img/
 		var firstnamePathArray = ["number0", "number1", "player", "player", "player", "player", "player", "player", "player", "player", "player", "player", "player", "player", "player", "player", "player", "player", "player", "player", "soldier", "soldier", "soldier", "soldier", "soldier", "soldier", "boss", "boss", "boss"];
 		var secondnamePathArray = [null, null, "bomb", "death", "explosion", "exulting", "getting_down", "getting_down_move", "getting_down_shooting", "jumping", "jumping_legs", "reloading", "resuscitate", "running", "running_legs_right", "shooting", "stabbing", "standing_stance", "standing_stance_legs", "throwing_bomb", "death", "death_blood", "running", "shooting", "standing_stance", "take_gun", "death", "running", "shooting"];
 		var numberOfImagesArray = [12, 10, 7, 10, 21, 4, 11, 7, 6, 6, 6, 18, 32, 6, 13, 10, 6, 4, 4, 5, 7, 15, 12, 5, 4, 8, 15, 4, 6];
-
-		var contatore = 0; //serve ad indicare in che posizione si trova nell'array Images la prima immagine di quella cartella
+		var contatore = 0;
 		for(var i=0; i<firstnamePathArray.length; i++){
 			ArrayOfInfoPathsImages.push(new InfoPathImages(firstnamePathArray[i], secondnamePathArray[i], numberOfImagesArray[i], contatore));
 			contatore += numberOfImagesArray[i];
 		}  
-
 		for(var i=0; i<ArrayOfInfoPathsImages.length; i++)
 			for(var j=1; j<=ArrayOfInfoPathsImages[i].numberOfImages; j++){
 				var img = new Image();
@@ -57,16 +47,12 @@ Sketcher.prototype.loadImages=
 				Images.push(img);
 			}
 	}  
-
-//dato il nome della prima cartella dopo css/img e di quella successiva
-//restituisce la posizione nell'array Images la prima immagine di quella cartella
 Sketcher.prototype.findFirstIndexOfImage =
 	function(firstname, secondname){
 		for (var i = 0; i < ArrayOfInfoPathsImages.length; i++)
 			if(firstname == ArrayOfInfoPathsImages[i].firstname && secondname == ArrayOfInfoPathsImages[i].secondname)
 				return ArrayOfInfoPathsImages[i].indexOfArray;
 	}  
-
 Sketcher.prototype.drawPlayground =
 	function(level, player) {
 		this.playgroundWrapper.style.height = (PLAYGROUND_HEIGHT + 100)+ 'px';
@@ -106,14 +92,11 @@ Sketcher.prototype.drawPlayground =
 		this.numberLife.src = "./../css/img/number0/number" + player.up + ".png";
 		this.gameOverImg.style.marginTop = (window.innerWidth*0.01 + 50) + "px";
 	} 
-
 Sketcher.prototype.drawTimer =
 	function(deci, unit){
 		this.numberTimer1.src ="./../css/img/number0/number" + deci + ".png";
 	 	this.numberTimer0.src ="./../css/img/number0/number" + unit + ".png";
 	}  
-
-//effetto compare/scompare
 Sketcher.prototype.drawCredit =
 	function(flag){
 		if(flag == 1)
@@ -121,16 +104,10 @@ Sketcher.prototype.drawCredit =
 		else
 			this.credit.style.display = "inline";			
 	} 
-
-//quando il giocatore arriva al centro dello schermo l'immagina sottostante (il playground) scorre verso sinistra
-//andando a decrementare il margine sinistro
 Sketcher.prototype.shiftPlayground =
 	function() {
 		this.playground.style.marginLeft = (parseInt(this.playground.style.marginLeft) - STEP_PLAYGROUND) + 'px';
 	} 
-
-//il playground scorre su tutta la schermata. Per mostrare lo scorrimento solo su una parte dello schermo
-//(quella centrale) aggiungo sopra, ai lati, dei div colorati che nascondono parte del playground
 Sketcher.prototype.drawSides =
 	function() {
 		var sideLeft1 = document.getElementById('sideLeft1');
@@ -140,7 +117,7 @@ Sketcher.prototype.drawSides =
 		sideLeft1.style.backgroundImage = 'url("./../css/img/sfondo/sfondo_body.jpg")';
 		sideLeft1.style.width = (window.innerWidth*0.1) + "px";
 		sideLeft1.style.marginLeft = -(window.innerWidth*0.1) + "px";
-		sideLeft1.style.height = 410 + "px"; //360 di playground più 50 di offsetTop
+		sideLeft1.style.height = 410 + "px";
 		sideLeft2.style.background = "black";
 		sideLeft2.style.width = parseInt(this.playground.style.marginLeft) + "px";
 		sideLeft2.style.marginLeft = 0 + "px";
@@ -156,12 +133,6 @@ Sketcher.prototype.drawSides =
 		sideRight2.style.marginLeft = (this.screen.clientWidth) + "px";
 		sideRight2.style.height = 410 + "px";
 	} 
-
-//con type intendo l'azione da svolgere in base alla quale si prenderà in considerazione unna cartella diversa
-//e in base all'indice (che viene modificato dai metodi della classe Game) in cui si trova l'azione
-//viene scelta l'immagine da proiettare
-//dati per la ricerca dell'immagine e caratteristiche su di essa (altezza, larghezza, margin, ecc.)
-//vengono passati ad una fuzione che si occuperà di attuare il cambio immagine (drawAction) 
 Sketcher.prototype.drawPlayer =
 	function(player, type) {
 		if(player.direction > 0)
@@ -172,12 +143,10 @@ Sketcher.prototype.drawPlayer =
 		this.playerBustNode.style.display = "block";
 		this.playerLegsNode.style.display = "block";
 		var secondname = "";
-
 		if(type == "running_right")
 			secondname = "running";
 		else
 			secondname = type;
-		
 		var firstIndexOfImageOfArray = this.findFirstIndexOfImage("player", secondname);
 		switch(type){
 			case "standing_stance":
@@ -258,9 +227,7 @@ Sketcher.prototype.drawPlayer =
 				this.playerLegsNode.style.display = "none"; 
 				break;
 		}
-
 	}
-
 //come il player
 //qui viene passato "i" l'indice dell'array dei soldati per riconoscere il nodo da modificare
 Sketcher.prototype.drawSoldier =
@@ -307,18 +274,14 @@ Sketcher.prototype.drawSoldier =
 				break;
 		}
 	} 
-
-//come il player
 Sketcher.prototype.drawBoss =
 	function(boss, type){
 		bossNode = this.addNode(boss, "boss", "boss_class", BOSS_RADIUS); 
 		var firstIndexOfImageOfArray = this.findFirstIndexOfImage("boss", type);
-		
 		if(boss.direction < 0)
 			bossNode.style.transform = "scaleX(1)";
 		if(boss.direction > 0)
 			bossNode.style.transform = "scaleX(-1)";
-
 		switch(type){
 			case "running": 
 				this.drawAction(boss, bossNode, firstIndexOfImageOfArray, boss.index_running_left, boss.height_running, boss.width_running, null, null, null);  
@@ -331,8 +294,6 @@ Sketcher.prototype.drawBoss =
 				break;
 		}
 	}
-
-//modifica il nodo passato con le informazioni date
 Sketcher.prototype.drawAction =
 	function(subject, subjectNode, firstIndexOfImageOfArray, index, height_action, width_action, top_action, left_action, margin_left_action){
 		if(firstIndexOfImageOfArray !== null)
@@ -363,7 +324,6 @@ Sketcher.prototype.drawAction =
 			else
 				subjectNode.style.marginLeft = margin_left_action[index - 1] + 'px';
 	} 
-
 Sketcher.prototype.drawBullet =
 	function(bullet, i, idBullet, colorBorder) {
 		bulletNode = this.addNode(bullet, idBullet + i, "bullet", 0)
@@ -374,7 +334,6 @@ Sketcher.prototype.drawBullet =
 		}else
 			bulletNode.style.border = 2 + "px solid " + colorBorder;
 	}  
-
 Sketcher.prototype.drawBomb =
 	function(bomb, i) {
 		bombNode = this.addNode(bomb, "bomb" + i, "bomb", 0);
@@ -382,19 +341,16 @@ Sketcher.prototype.drawBomb =
 		bombNode.style.width = bomb.width[bomb.img - 1] + 'px';
 		bombNode.style.height = bomb.height[bomb.img - 1] + 'px';
 	} 
-
 Sketcher.prototype.drawExplosion =
 	function(explosion, i) {	
 		explosionNode = this.addNode(explosion, "explosion" + i, "explosion_class", 0);
 		explosionNode.style.backgroundImage = "url('./../css/img/player/explosion/explosion"+ explosion.img +".png')";
-		
 		if(explosion.img == 1){
 			explosionNode.style.top = (explosion.point.y - 63) + 'px';
 			explosionNode.style.left = (explosion.point.x - 15) + 'px';
 		}else{
 			explosionNode.style.top = (explosion.point.y - 90) + 'px';
 			explosionNode.style.left = (explosion.point.x) + 'px';
-		
 		}
 		if(explosion.img == 2)
 			explosionNode.style.width = 45 + 'px';
@@ -402,8 +358,6 @@ Sketcher.prototype.drawExplosion =
 			explosionNode.style.width = 50 + 'px';
 		explosionNode.style.height = explosion.height[explosion.img - 1] + 'px';
 	}  
-
-//aggiunge un nodo al playground
 Sketcher.prototype.addNode =
 	function(subject, id, className, radius){
 		subjectNode = document.getElementById(id);
@@ -417,22 +371,17 @@ Sketcher.prototype.addNode =
 		subjectNode.style.left = (subject.point.x - radius) + 'px';
 		return subjectNode;
 	} 
-
 Sketcher.prototype.drawCounterArms =
 	function(numberArms3, numberArms2, numberArms1){
 		this.numberArms3Node.src = "./../css/img/number0/number" + numberArms3 +".png";
 		this.numberArms2Node.src = "./../css/img/number0/number" + numberArms2 +".png";
 		this.numberArms1Node.src = "./../css/img/number0/number" + numberArms1 +".png";
 	} 
-
 Sketcher.prototype.drawCounterBombs =
 	function(numberBomb2, numberBomb1){
 		this.numberBomb2Node.src = "./../css/img/number0/number" + numberBomb2 +".png";
 		this.numberBomb1Node.src = "./../css/img/number0/number" + numberBomb1 +".png";
 	} 
-
-//inizialmente solo il number0 è presente sul campo
-//mano a mano che il player fa punti verranno presentati in schermata gli altri
 Sketcher.prototype.drawScore =
 	function(number0, number1, number2, number3, number4, number5){
 		if(number1 !== 0)
@@ -453,4 +402,3 @@ Sketcher.prototype.drawScore =
 		this.numberScore4.src = "./../css/img/number0/number"+ number4 +".png";
 		this.numberScore5.src = "./../css/img/number0/number"+ number5 +".png";
 	} 
-
