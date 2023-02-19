@@ -1,0 +1,21 @@
+bomb.js : khởi tạo obj bomb
+ -vị trí , tọa độ, ảnh , hướng ,độ cao
+ 
+boss.js  : khởi tạo obj boss
+ -số boss, hướng bắn , hướng đi , vị trí.
+bullet.js : 
+ -vị trí, hướng di chuyển, stepX: đi được bn
+explosion.js
+ -vị trí, ảnh, độ cao
+player.js
+ -vị trí, thuộc tính, máu, đạn, method:running
+popup.js
+ -nhúng obj vào html
+sketcher.js
+ - vẽ backgound chạy qua frame
+soilder.js
+ - quái bắn 
+util.js
+ - hằng số, hàm tái sử dụng, 
+tính tọa độ :
+tính từ (0,0) -> width, height 

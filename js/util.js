@@ -31,8 +31,8 @@ var SLOW_DOWN_DEATH = 3;
 var SLOW_DOWN_SCORE = 1;
 var SLOW_DOWN_COUNTDOWN = 50;
 var SLOW_DOWN_RESUSCITATE = 3;
-var RELOADING_ARMS = 8;
-var RELOADING_BOMBS = 5;
+var RELOADING_ARMS = 99;
+var RELOADING_BOMBS = 50;
 var SLOW_DOWN_CREATE_SOLDIER = 100;
 var SLOW_DOWN_RUNNING_SOLDIER = 4;
 var SLOW_DOWN_TAKE_GUN_SOLDIER = 5;
@@ -60,12 +60,22 @@ function is_int(n){
   if (!is_numeric(n)) return false
   else return (n % 1 == 0);
 }
+<<<<<<< Updated upstream
+=======
+
+//Tạo một đối tượng với thông tin sau để giúp dễ dàng tìm kiếm hình ảnh trên Sketcher
+>>>>>>> Stashed changes
 function InfoPathImages(firstname, secondname, numberOfImages, indexOfArray){
 	this.firstname = firstname;
 	this.secondname = secondname;
 	this.numberOfImages = numberOfImages;
 	this.indexOfArray = indexOfArray;
 }
+<<<<<<< Updated upstream
+=======
+
+//Ẩn div đăng nhập và hiển thị div đăng ký
+>>>>>>> Stashed changes
 function goToRegister() {
 	document.getElementById("fieldset_login").style.display = "none";
 	document.getElementById("buttonToRegister").style.display = "none";
